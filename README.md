@@ -37,9 +37,14 @@ This repository contains the code for the project "Joint Prediction with Exchang
 
 ## Running the code
 
-To run the training scripts, you can run: 
+To run the training scripts with single GPU, you can run: 
 ```
-python launch.py gp_train.py config.yaml --port 29500
+python launch.py gp_train.py config.yaml single_gpu.yaml --port 29500
+```
+
+For multi-GPU training, we use DeepSpeed Zero 2 to accelerate the training process. You can run: 
+```
+python launch.py gp_train.py config.yaml multi_gpu.yaml --port 29500
 ```
 
 Notice that you must use a different port for each training process, if you are running multiple processes on the same

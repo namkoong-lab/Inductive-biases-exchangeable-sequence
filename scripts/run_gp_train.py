@@ -6,8 +6,8 @@ def run_task(command):
 
 if __name__ == "__main__":
     commands = [
-        "python launch.py gp_train.py gp_uq_normal_autoreg.yaml --port 29501",
-        "python launch.py gp_train.py gp_uq_normal_excg.yaml --port 29502",
+        "python launch.py gp_train.py gp_uq_normal_autoreg.yaml multi_gpu.yaml --port 29501",
+        "python launch.py gp_train.py gp_uq_normal_excg.yaml multi_gpu.yaml --port 29502",
         ]
 
     processes = []
@@ -20,3 +20,5 @@ if __name__ == "__main__":
         p.join()
 
     print("All tasks completed.")
+
+    

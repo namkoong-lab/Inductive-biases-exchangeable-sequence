@@ -9,7 +9,7 @@ def get_args_str(hyperparameters):
         args_str += f'--{arg}={value} '
     return args_str.strip()
 
-def main(config_file, main_script, port):
+def main(config_file, main_script, accelerate_config_file, port):
     # Read the YAML configuration file
     with open(config_file, "r") as file:
         config = yaml.safe_load(file)
@@ -26,7 +26,7 @@ def main(config_file, main_script, port):
 
     command = [
         "accelerate", "launch",
-        "--config_file", "accelerate_config.yaml",
+        "--config_file", accelerate_config_file,
         "--main_process_port", str(port),
         main_script,
     ] + get_args_str(hyperparameters).split()
@@ -36,8 +36,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Launch script with optional port specification.")
     parser.add_argument("main_script", help="Path to the main script to run")
     parser.add_argument("config_file", help="Path to the configuration file")
+    parser.add_argument("accelerate_config_file", help="Path to the accelerate configuration file")
     parser.add_argument("--port", type=int, default=29500, help="Port number (default: 29500)")
 
     args = parser.parse_args()
 
-    main(args.config_file, args.main_script, args.port)
+    main(args.config_file, args.main_script, args.accelerate_config_file, args.port)

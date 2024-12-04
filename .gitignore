@@ -1,3 +1,6 @@
 # Ignore Weights & Biases files
 wandb/
 wandb/*
+
+ViT/
+*.pyc
