@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
 
-from data.load_data import load_reward_data, load_toy_reward_data, load_contextual_bandit_data, load_classical_contextual_bandit_data, load_gpsampler_constant_data
+from data.load_data import load_reward_data, load_toy_reward_data, load_contextual_bandit_data, load_classical_contextual_bandit_data, load_gpsampler_constant_data, load_yahoo_news_sequence_data
 from models.autoreg_model import Autoreg_Model
 from models.excg_model import ExCg_Model
 from utils.scheduler import CosineWarmupScheduler
@@ -45,6 +45,8 @@ class Trainer:
             self.training_dataloader, self.test_dataloader = load_classical_contextual_bandit_data(self.training_args, self.data_args, self.model_args)
         elif self.data_args.dataset_name == "gp":
             self.training_dataloader, self.test_dataloader = load_gpsampler_constant_data(self.training_args, self.data_args, self.model_args)
+        elif self.data_args.dataset_name == "yahoo_news_sequence":
+            self.training_dataloader, self.test_dataloader = load_yahoo_news_sequence_data(self.training_args, self.data_args, self.model_args)
         else:
             self.training_dataloader, self.test_dataloader = load_reward_data(self.training_args, self.data_args, self.model_args)
 
@@ -187,6 +189,15 @@ class Trainer:
                 if checkpoint_iter == None:
                     torch.save(unwrapped_model.state_dict(), f"{saving_dir}/model.pt")
 
+                else: 
+                    torch.save(unwrapped_model.state_dict(), f"{saving_dir}/model_checkpoint_{checkpoint_iter}.pt")
+            
+            elif self.data_args.dataset_name == "yahoo_news_sequence":
+                saving_dir = f"/shared/share_mala/Leon/YNS_{self.model_args.dim_llm_embedding}/{self.model_args.model_type}-UQ-{self.model_args.uncertainty}-Gradient-{self.model_args.gradient_type}-Loss-{self.model_args.loss_type}-Horizon-{self.training_args.train_horizon}_Noise_{self.data_args.noise_scale}"
+                if not os.path.exists(saving_dir):
+                    os.makedirs(saving_dir)
+                if checkpoint_iter == None:
+                    torch.save(unwrapped_model.state_dict(), f"{saving_dir}/model.pt")
                 else: 
                     torch.save(unwrapped_model.state_dict(), f"{saving_dir}/model_checkpoint_{checkpoint_iter}.pt")
             

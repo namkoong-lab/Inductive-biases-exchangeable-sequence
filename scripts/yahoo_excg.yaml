@@ -1,0 +1,47 @@
+model_args:
+  dim_llm_embedding: 137
+  dim_y: 1
+  emb_depth: 1
+  d_model: 256
+  dim_feedforward: 512
+  nhead: 8
+  dropout: 0.1
+  activation: gelu
+  num_layers: 8
+  bound_std: true
+  embed_type: embed_concat
+  uncertainty: normal
+  loss_type: logprob
+  pad_value: 0.0
+  gradient_type: full
+  model_type: excg
+
+training_args:
+  lr: 0.0003
+  seed: 3004
+  weight_decay: 0.01
+  warmup_ratio: 0.03
+  min_lr: 0.00003
+  total_train_batch_size: 64
+  total_test_batch_size: 64
+  num_process: 1
+  epochs: 100
+  eval_steps: 100
+  train_horizon: 2000
+  test_horizon: 200
+  eval_func: "eval_func"
+  num_train_samples: 4096
+  num_test_samples: 4096
+  load_from_checkpoint: false
+
+data_args:
+  dataset_name: "yahoo_news_sequence"
+  num_train_workers: 8
+  num_test_workers: 8
+  noise_scale: 0.1
+  alpha: 0.05
+
+logging_args:
+  task: LLM
+  wandb_project: CCB
+  eval_log_step: 10000

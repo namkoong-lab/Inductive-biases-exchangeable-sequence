@@ -246,6 +246,7 @@ class Autoreg_Model(nn.Module):
         So lets say we have x1:t and y1:t, we want to see the plot the std over all data and batch over time t. So when we use wandb log, we will create a diagram for every evaluation step, and that diagram will show the std over sequence t.
         '''
 
+
         x = batch.x
         y = batch.y
         # self.accelerator.print(f'x shape: {x.shape}, y shape: {y.shape}')

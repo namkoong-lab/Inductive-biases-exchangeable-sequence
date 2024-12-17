@@ -246,6 +246,7 @@ def load_classical_contextual_bandit_data(training_args, data_args, model_args):
 
     return train_data_loader, test_data_loader
 
+
 class GaussianProcessConstant(gpytorch.models.ExactGP):
     def __init__(self, x, y, likelihood, mean_constant=0.0, lengthscale=1.0, outputscale=1.0, noise=0.1):
         super().__init__(x, y, likelihood)
@@ -317,3 +318,80 @@ def load_gpsampler_constant_data(training_args, data_args, model_args):
     return train_data_loader, test_data_loader
 
 
+
+class ClassicalContextualBanditDataset(Dataset):
+    def __init__(self, num_samples, context_dim, horizon, noise_std):
+        self.num_samples = num_samples
+        self.context_dim = context_dim
+        self.horizon = horizon
+        self.noise_std = noise_std
+
+    def __len__(self):
+        return self.num_samples
+
+    def __getitem__(self, idx):
+
+        context = torch.randn(self.horizon, self.context_dim)
+        theta_true = torch.randn(1, self.context_dim)
+        theta_true = theta_true / torch.norm(theta_true, p='fro')
+        y = torch.matmul(context, theta_true.T)
+
+        noise = torch.randn(y.shape) * self.noise_std
+        noisy_y = y + noise
+
+        return context, noisy_y
+
+
+class YahooNewsSequenceDataset(Dataset):
+    def __init__(self, num_samples, context_dim, horizon, noise_std, split):
+
+        self.split_dir = "/shared/share_mala/Leon/yahoo_cb/splits"
+        self.horizon = horizon
+        # Load the data
+        self.X = np.load(os.path.join(self.split_dir, f"X_{split}.npy"))
+        self.Y = np.load(os.path.join(self.split_dir, f"Y_{split}.npy"))
+        
+        # Convert to torch tensors
+        self.contexts = torch.FloatTensor(self.X)  # All columns except the last one
+        self.rewards = torch.FloatTensor(self.Y)
+        
+        self.num_samples = num_samples
+        
+    def __len__(self):
+        return self.num_samples
+        
+    def __getitem__(self, idx):
+        # Randomly sample horizon number of indices
+        indices = np.random.choice(self.num_samples, size=self.horizon, replace=True)
+        
+        # Create sequence of contexts and rewards
+        context_seq = self.contexts[indices]
+        reward_seq = self.rewards[indices]
+        
+        return context_seq, reward_seq.unsqueeze(-1)
+
+def load_yahoo_news_sequence_data(training_args, data_args, model_args):
+
+    train_batch_size = training_args.total_train_batch_size // training_args.num_process
+    test_batch_size = training_args.total_test_batch_size // training_args.num_process
+    
+    # Create datasets
+    train_dataset = YahooNewsSequenceDataset(
+        num_samples=training_args.num_train_samples,
+        horizon=training_args.train_horizon, 
+        context_dim=model_args.dim_llm_embedding,
+        noise_std=data_args.noise_scale,
+        split='train'
+    )
+    test_dataset = YahooNewsSequenceDataset(
+        num_samples=training_args.num_test_samples,
+        horizon=training_args.test_horizon, 
+        context_dim=model_args.dim_llm_embedding,
+        noise_std=data_args.noise_scale,
+        split='test'
+    )
+    
+    train_data_loader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
+    test_data_loader = DataLoader(test_dataset, batch_size=test_batch_size, shuffle=False, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
+    
+    return train_data_loader, test_data_loader
