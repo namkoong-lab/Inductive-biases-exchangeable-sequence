@@ -26,87 +26,11 @@ def scalar_collate_fn(batch):
     y = torch.stack(y, dim=0)
     return Rawdata(x, y)
 
-class Reward_Dataset(Dataset):
-    def __init__(self, dataset_dir, dim_llm_embedding, num_samples, horizon, train_split):
-        dataset_dir = os.path.join(dataset_dir, 'reward_{}'.format(dim_llm_embedding))
-        self.dataset = load_from_disk(dataset_dir)[train_split]
-        self.embeddings = torch.tensor(self.dataset['embedding'])
-        self.rewards = torch.tensor(self.dataset['rewards'])
-        self.horizon = horizon
-        self.num_classes = self.rewards.shape[1]  # Assuming rewards is a 2D tensor
-        self.num_samples = num_samples
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, idx):
-        # Randomly sample a list of horizon data from the dataset
-        indices = torch.randint(0, len(self.embeddings), (self.horizon,))
-        # print(indices)
-        
-        # Sample W from Dirichlet distribution
-        alpha = 0.05
-        w = torch.distributions.Dirichlet(torch.full((self.num_classes,), alpha)).sample()
-        
-        # Get embeddings and rewards for the sampled indices
-        x = self.embeddings[indices]
-        y = self.rewards[indices]
-        
-        # Calculate reweighted reward
-        reweighted_y = torch.matmul(y, w.unsqueeze(1))
-
-        # print(f'x shape: {x.shape}, y shape: {y.shape}, reweighted_y shape: {reweighted_y.shape}')
-
-        return x, reweighted_y
-    
-
 def load_reward_data(training_args, data_args, model_args):
     train_batch_size = training_args.total_train_batch_size // training_args.num_process
     test_batch_size = training_args.total_test_batch_size // training_args.num_process
     train_dataset = Reward_Dataset(data_args.dataset_dir, model_args.dim_llm_embedding, training_args.num_train_samples,  training_args.train_horizon, 'train')
     test_dataset = Reward_Dataset(data_args.dataset_dir, model_args.dim_llm_embedding, training_args.num_test_samples, training_args.test_horizon, 'test')
-    train_data_loader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
-    test_data_loader = DataLoader(test_dataset, batch_size=test_batch_size, shuffle=False, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
-
-    return train_data_loader, test_data_loader
-
-
-class ToyRewardDataset(Dataset):
-    def __init__(self, num_samples, dim_llm_embedding, horizon, w_file_path, alpha, noise_std=0.1):
-        self.num_samples = num_samples
-        self.dim_llm_embedding = dim_llm_embedding
-        self.horizon = horizon
-        self.noise_std = noise_std
-        self.alpha = alpha
-
-        self.Reward_W = torch.load(w_file_path)
-
-        self.num_reward_model = self.Reward_W.shape[0]
-
-
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, idx):
-
-        x = torch.randn(self.horizon, self.dim_llm_embedding)
-
-        y = torch.matmul(x, self.Reward_W.T)
-
-        Dirichlet_W = torch.distributions.Dirichlet(torch.full((self.num_reward_model,), self.alpha)).sample()
-
-        reweighted_y = torch.matmul(y, Dirichlet_W.unsqueeze(1))
-
-        return x, reweighted_y
-    
-
-def load_toy_reward_data(training_args, data_args, model_args):
-    train_batch_size = training_args.total_train_batch_size // training_args.num_process
-    test_batch_size = training_args.total_test_batch_size // training_args.num_process
-    w_file_path = "/user/al4263/rlhf/TPU/data/W.pt"
-    train_dataset = ToyRewardDataset(training_args.num_train_samples, model_args.dim_llm_embedding, training_args.train_horizon, w_file_path, data_args.alpha)
-    test_dataset = ToyRewardDataset(training_args.num_test_samples, model_args.dim_llm_embedding, training_args.test_horizon, w_file_path, data_args.alpha)
     train_data_loader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
     test_data_loader = DataLoader(test_dataset, batch_size=test_batch_size, shuffle=False, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
 
@@ -155,42 +79,6 @@ def load_contextual_bandit_data(training_args, data_args, model_args):
     test_data_loader = DataLoader(test_dataset, batch_size=test_batch_size, shuffle=False, collate_fn=scalar_collate_fn, num_workers=data_args.num_test_workers)
 
     return train_data_loader, test_data_loader
-
-# class ClassicalContextualBanditDataset(Dataset):
-#     def __init__(self, num_samples, context_dim, horizon, noise_std):
-#         self.num_samples = num_samples
-#         self.context_dim = context_dim
-#         self.horizon = horizon
-#         self.noise_std = noise_std
-
-#     def __len__(self):
-#         return self.num_samples
-
-#     def __getitem__(self, idx):
-
-#         funcs, X_test = setup_gp(1)
-#         x_indices = torch.randint(0, X_test.shape[0], (self.horizon,))
-#         context = X_test[x_indices]
-#         y = funcs[:, x_indices].T
-
-#         noise = torch.randn(y.shape) * self.noise_std
-#         noisy_y = y + noise
-
-#         return context, noisy_y
-
-class HyperbolicFunction(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.a = nn.Parameter(torch.randn(1))
-        self.b = nn.Parameter(torch.randn(1))
-        self.c = nn.Parameter(torch.randn(1))
-
-        self.a.requires_grad = False
-        self.b.requires_grad = False
-        self.c.requires_grad = False
-        
-    def forward(self, x):
-        return self.a * x**2 + self.b * x + self.c
     
 class ClassicalContextualBanditDataset(Dataset):
     def __init__(self, num_samples, context_dim, horizon, noise_std):

@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
 
-from data.load_data import load_reward_data, load_toy_reward_data, load_contextual_bandit_data, load_classical_contextual_bandit_data, load_gpsampler_constant_data, load_yahoo_news_sequence_data
+from data.load_data import load_contextual_bandit_data, load_classical_contextual_bandit_data, load_gpsampler_constant_data, load_yahoo_news_sequence_data
 from models.autoreg_model import Autoreg_Model
 from models.excg_model import ExCg_Model
 from utils.scheduler import CosineWarmupScheduler
@@ -37,9 +37,7 @@ class Trainer:
         
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.training_args.lr, weight_decay=self.training_args.weight_decay)
 
-        if self.data_args.dataset_name == "toy_data":
-            self.training_dataloader, self.test_dataloader = load_toy_reward_data(self.training_args, self.data_args, self.model_args)
-        elif self.data_args.dataset_name == "contextual_bandit":
+        if self.data_args.dataset_name == "contextual_bandit":
             self.training_dataloader, self.test_dataloader = load_contextual_bandit_data(self.training_args, self.data_args, self.model_args)
         elif self.data_args.dataset_name == "classical_contextual_bandit":
             self.training_dataloader, self.test_dataloader = load_classical_contextual_bandit_data(self.training_args, self.data_args, self.model_args)

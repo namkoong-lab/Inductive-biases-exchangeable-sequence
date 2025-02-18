@@ -7,26 +7,22 @@ This repository contains the code for the project "Joint Prediction with Exchang
 - `data`
     - `load_data.py`: Define your training function classes here, see the GP constant for an example.
 
-- `inference`
-    - `Transformer_gp_eval_full.ipynb`: The inference code that creates plots for all three different models on the same
-      plot.
-    - `Transformer_gp_eval.ipynb`: Previous inference code, might contain bugs.
-
 - `models`
     - `autoreg_model.py`: Contains `Autoreg_Model` class, which is the implementation of autoregressive model.
     - `excg_model.py`: Contains `ExCg_Model` class, which is the implementation of exchangeable model.
+    - `model_utils.py`: Some utility functions for the models.
+    - `TS_model.py`: The implementation of joint prediction model and Thompson sampling algorithm, which takes in either
+      autoregressive or exchangeable model.
+    
+  - `inference`
     - `joint_prediction_model.py`: The implementation of joint prediction model, which takes in either autoregressive or
       exchangeable model.
-    - `model_utils.py`: Some utility functions for the models.
-    - `create_dist.ipynb`: Used for computing buckets for riemann distribution.
 
 - `scripts`
-    - `gp_train.py`: Main training scripts. 
+    - `train.py`: Main training scripts for loading in the arguments and calling the trainer.
     - `accelerate_config.yaml`: The configuration file for using distributed training with accelerate.
-    - `gp_uq_normal_autoreg.yaml`: The configuration file for using autoregressive model.
-    - `gp_uq_normal_excg.yaml`: The configuration file for using exchangeable model.
     - `launch.py`: launch the training scripts with config files.
-    - `run_gp_train.py`: Directly run training for both models.
+    - `configs`: The configuration files for different models.
 
 - `trainers`
     - `trainer.py`: Contains the distributed training and evaluation code.
@@ -35,17 +31,36 @@ This repository contains the code for the project "Joint Prediction with Exchang
     - `load_model.py`: Loading the model.
     - `scheduler.py`: The learning rate scheduler.
 
+## Environment Setup
+
+Create and activate the environment:
+```bash
+# Create environment from the provided environment.yml
+conda env create -f environment.yml
+
+# Activate the environment
+conda activate ccb_env
+```
+
 ## Running the code
+
+First cd into the `scripts` directory. 
+
+```
+cd scripts
+```
 
 To run the training scripts with single GPU, you can run: 
 ```
-python launch.py gp_train.py config.yaml single_gpu.yaml --port 29500
+python launch.py train.py configs/autoreg_1_horizon_15_seed_100_noise_0.1.yaml single_gpu.yaml --port 29500
 ```
 
 For multi-GPU training, we use DeepSpeed Zero 2 to accelerate the training process. You can run: 
 ```
-python launch.py gp_train.py config.yaml multi_gpu.yaml --port 29500
+python launch.py train.py configs/autoreg_1_horizon_15_seed_100_noise_0.1.yaml multi_gpu.yaml --port 29500
 ```
+
+For other configurations, you can modify the config files in the `configs` directory. 
 
 Notice that you must use a different port for each training process, if you are running multiple processes on the same
 machine. 
@@ -117,7 +132,48 @@ and masks for training. Take a look at `construct_causal_input`, `construct_caus
 
 ## Inference
 
-The inference code is in `Transformer_gp_eval_full.ipynb`. The code should be self-explanatory. 
+The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-Notice that the model above only does marginal prediction. To do joint prediction, see how we used
-`joint_prediction_model.py` in the inference code. 
+### Contextual Bandit Experiments
+
+The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms:
+
+- **Thompson Sampling (TS) Variants**:
+  - Autoregressive TS with joint prediction
+  - Exchangeable TS with joint prediction
+  - One-step prediction (PFN)
+- **LinUCB** (baseline algorithm)
+
+Key features:
+- Parallel execution across multiple GPUs
+- Batched updates for improved efficiency
+- Comprehensive logging and visualization
+- Confidence interval calculations
+
+### Running Experiments
+
+To run the bandit experiments:
+
+```bash
+cd inference
+python ccb_inf_batch.py
+```
+
+Key parameters that can be modified:
+- `num_jobs`: Number of parallel processes (default: 100)
+- `total_experiments`: Number of experiment sets (default: 10)
+- `T`: Number of time steps per experiment (default: 100)
+- `imag_horizon`: Imagination horizon for TS (default: 100)
+- `batch_exp`: Batch size for updates (default: 1)
+
+### Output
+
+The script generates:
+1. CSV files with detailed statistics:
+   - `excg_cumulative_final_statistics.csv`
+   - `pfn_cumulative_final_statistics.csv`
+2. Raw data files:
+   - `excg_cumulative_all_raw_data.csv`
+   - `pfn_cumulative_all_raw_data.csv`
+3. Visualization:
+   - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals 

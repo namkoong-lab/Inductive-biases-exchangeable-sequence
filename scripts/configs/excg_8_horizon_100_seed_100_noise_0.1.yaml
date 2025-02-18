@@ -1,0 +1,44 @@
+data_args:
+  alpha: 0.05
+  dataset_name: gp
+  noise_scale: 0.1
+  num_test_workers: 8
+  num_train_workers: 8
+logging_args:
+  eval_log_step: 10000
+  task: LLM
+  wandb_project: GP-Final-2
+model_args:
+  activation: gelu
+  bound_std: true
+  d_model: 64
+  dim_feedforward: 256
+  dim_llm_embedding: 8
+  dim_y: 1
+  dropout: 0.1
+  emb_depth: 1
+  embed_type: embed_concat
+  gradient_type: full
+  loss_type: logprob
+  model_type: excg
+  nhead: 4
+  num_layers: 4
+  pad_value: 0.0
+  uncertainty: normal
+training_args:
+  epochs: 400
+  eval_func: eval_func
+  eval_steps: 100
+  load_from_checkpoint: false
+  lr: 0.0003
+  min_lr: 3.0e-05
+  num_process: 1
+  num_test_samples: 8192
+  num_train_samples: 8192
+  seed: 100
+  test_horizon: 100
+  total_test_batch_size: 64
+  total_train_batch_size: 64
+  train_horizon: 100
+  warmup_ratio: 0.03
+  weight_decay: 0.01
