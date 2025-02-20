@@ -57,9 +57,7 @@ def get_data_function(data_type, args):
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--data_dir", type=str, default="/shared/share_mala/tyen/seqb/data"
-    )
+    parser.add_argument("--data_dir", type=str, default=None)
     parser.add_argument(
         "--data_type",
         type=str,

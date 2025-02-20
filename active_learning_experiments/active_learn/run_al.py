@@ -26,7 +26,7 @@ from utils.load_model import load_model
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_type", type=str, default="matmul")
+    parser.add_argument("--data_type", type=str, default="al_regions_v2")
     parser.add_argument("--num_train", type=int, default=5)
     parser.add_argument("--num_pool", type=int, default=95)
     parser.add_argument("--max_choice", type=int, default=20)
@@ -152,7 +152,7 @@ def pick_context(context, y, idx):
 
 
 def get_file_folder(args):
-    save_folder = f"/shared/share_mala/tyen/seqb/results/al_{args.data_type}"
+    save_folder = None
     save_folder = os.path.join(
         save_folder,
         f"num_train={args.num_train}_num_pool={args.num_pool}_max-choice={args.max_choice}_num_test={args.num_test}_num_rollouts={args.num_rollouts}_rollout_length={args.rollout_length}_model-epoch={args.model_epoch}_seed={args.seed}",
@@ -207,7 +207,7 @@ def run_exp(
     print("Models loaded")
 
     # Load data
-    DATA_FOLDER = "/shared/share_mala/tyen/seqb/data/al_matmul/context_dim=1_horizon=200_noise=0.1"
+    DATA_FOLDER = None
 
     # Taking data that model has not seen
     #   dim: [NUM_SAMPLES, [Train, Pool, Test], context_dim]
