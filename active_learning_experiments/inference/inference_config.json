@@ -1,0 +1,11 @@
+{
+    "num_gpus": 8,
+    "num_jobs": 100,
+    "num_iterations": 100,
+    "imag_horizon": 100,
+    "num_imag_samples": 100,
+    "noise_scale": 0.8,
+    "arm_dir": "/user/al4263/rlhf/TPU/data/theta_10_6_4.pt",
+    "context_dim": 6,
+    "action_dim": 4
+}

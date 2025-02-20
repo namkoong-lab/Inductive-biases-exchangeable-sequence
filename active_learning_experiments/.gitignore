@@ -1,0 +1,3 @@
+# Ignore Weights & Biases files
+wandb/
+wandb/*
