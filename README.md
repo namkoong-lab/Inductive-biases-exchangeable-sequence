@@ -8,25 +8,26 @@ We study the inferential and architectural inductive biases for exchangeable seq
 ## Key components
 
 - Synthetic data generation
-- Transformer model architectures - C-permutation inveriant architecture and Standard causal architecture
+- Transformer model architectures - C-permutation invariant architecture and Standard causal architecture
 - Single-step and Multi-step inference
 - Downstream tasks - Multi-Armed Bandits, Active Learning
 
 ## File Structure
 
 - `data`
-    - `load_data.py`: Define your training function classes here, see the GP constant for an example.
+    - `load_data.py`: Loads synthetic dataset generation (Gaussian Processes). Other dataset generation functions can also be defined here.
 
 - `models`
-    - `autoreg_model.py`: Contains `Autoreg_Model` class, which is the implementation of autoregressive model.
-    - `excg_model.py`: Contains `ExCg_Model` class, which is the implementation of exchangeable model.
+    - `autoreg_model.py`: Implementation of `Standarad-causal` architecture.
+    - `excg_model.py`: Implementation of `C-permutation Invariant` architecture.
     - `model_utils.py`: Some utility functions for the models.
-    - `TS_model.py`: The implementation of joint prediction model and Thompson sampling algorithm, which takes in either
-      autoregressive or exchangeable model.
-    
+      
   - `inference`
-    - `joint_prediction_model.py`: The implementation of joint prediction model, which takes in either autoregressive or
-      exchangeable model.
+    - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
+
+  - `models/TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
+    - 
+    
 
 - `scripts`
     - `train.py`: Main training scripts for loading in the arguments and calling the trainer.
