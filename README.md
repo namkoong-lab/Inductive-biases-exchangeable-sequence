@@ -1,6 +1,6 @@
-# Joint Prediction with Exchangeable Sequence Model
+# Architectural and Inferential Inductive Biases For Exchangeable Sequence Modeling
 
-This repository contains the code for the project "Joint Prediction with Exchangeable Sequence Model". 
+This repository contains the code for the paper "Architectural and Inferential Inductive Biases For Exchangeable Sequence Modeling". 
 
 ## File Structure
 
