@@ -134,7 +134,7 @@ and masks for training. Take a look at `construct_causal_input`, `construct_caus
 
 The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-### Multi-Armed Bandit Experiments
+# Multi-Armed Bandit Experiments
 
 The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms:
 
@@ -176,4 +176,20 @@ The script generates:
    - `excg_cumulative_all_raw_data.csv`
    - `pfn_cumulative_all_raw_data.csv`
 3. Visualization:
-   - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals 
+   - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals
+
+# Active Learning Experoments
+
+Here are the steps you need to take to reproduce the active learning results
+
+1. Generate the data: Run `python ./data/generate_data.py --data_dir [where_to_save_data] --data_type al_regions_v2`
+2. Train models on the generated data:
+
+   - modify `dataset_dir` field in `./scripts/uq_al_regions_v2_50_autoreg.yaml` and `./scripts/uq_al_regions_v2_50_excg.yaml`
+   - run `python launch.py train.py [either yaml file above] --port 29500`
+
+3. Run active learning experiments
+   - modify `save_folder` on line 155 of `./active_learn/run_al.py` to where you want to save active learning results
+   - modify `DATA_FOLDER` on line 210 of `./active_learn/run_al.py` to where the generated data (from step 1) is
+   - run `./active_learn/run_al.py`
+
