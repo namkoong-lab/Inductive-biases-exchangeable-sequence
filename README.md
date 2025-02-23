@@ -178,7 +178,7 @@ The script generates:
 3. Visualization:
    - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals
 
-# Active Learning Experoments
+# Active Learning Experiments
 
 Here are the steps you need to take to reproduce the active learning results
 
