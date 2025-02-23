@@ -3,13 +3,14 @@
 This repository contains the code for the paper "Architectural and Inferential Inductive Biases For Exchangeable Sequence Modeling". 
 
 ## Intorduction
-We study the inferential and architectural inductive biases for exchangeable sequence modeling.  
+We study the inferential and architectural inductive biases for exchangeable sequence modeling. For the inference stage, we compare one-step inference and multi-step inference.  We highlight a fundamental limitation of the prevalent single-step generation approach: inability to distinguish between epistemic and aleatoric uncertainty. However, multi-step autoregressive generation; enables superior uncertainty quantification that translates into better performance on downstream decision-making tasks. For architectural inductive biases - we compare cutom architectures that try to enforce exchangeability to the standard causal architectures. We demonstrate that custom architectures can significantly underperform standard causal architectures.
 
-For the inference stage, we compare one-step inference and multi-step inference.  We highlight a fundamental limitation of the prevalent single-step generation approach: inability to distinguish between epistemic and aleatoric uncertainty. However, multi-step autoregressive
-generation; enables superior uncertainty quantification that translates into better performance on downstream decision-making tasks
+## Key components
 
-For architectural inductive biases - we compare cutom architectures that try to enforce exchangeability to the standard causal architectures. We demonstrate that custom architectures can significantly underperform standard causal architectures
-
+- Synthetic data generation
+- Transformer model architectures - C-permutation inveriant architecture and Standard causal architecture
+- Single-step and Multi-step inference
+- Downstream tasks - Multi-Armed Bandits, Active Learning
 
 ## File Structure
 
