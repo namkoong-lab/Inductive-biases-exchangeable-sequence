@@ -41,7 +41,8 @@ We study the inferential and architectural inductive biases for exchangeable seq
     - `scheduler.py`: The learning rate scheduler.
 
 - `active_learning_experiments`
-    -
+    - `active_learn\run_al.py`: Script for running active learning experiments
+    - `active_learn\plot_al.ipynb`: Script for visualizing the active learning results
 
 ## Environment Setup
 
