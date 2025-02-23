@@ -89,57 +89,34 @@ and masks for training. Take a look at `construct_causal_input`, `construct_caus
 
 The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-## Multi-Armed Bandit Experiments
 
-The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms:
+1. The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms. Thompson Sampling (TS) Variants:
+  - TS with multi-step prediction
+  - TS with One-step prediction
+    
+2. Running Experiments: To run the bandit experiments - `cd inference python ccb_inf_batch.py`. Key parameters that can be modified:
+   - `num_jobs`: Number of parallel processes (default: 100)
+   - `total_experiments`: Number of experiment sets (default: 10)
+   - `T`: Number of time steps per experiment (default: 100)
+   - `imag_horizon`: Imagination horizon for TS (default: 100)
+   - `batch_exp`: Batch size for updates (default: 1)
 
-- **Thompson Sampling (TS) Variants**:
-  - Autoregressive TS with multi-step prediction
-  - Exchangeable TS with multi-step prediction
-  - One-step prediction
+3. Output - the script generates: 
+   -  CSV files with detailed statistics: `excg_cumulative_final_statistics.csv`, `pfn_cumulative_final_statistics.csv`
+   -  Raw data files: `excg_cumulative_all_raw_data.csv`, pfn_cumulative_all_raw_data.csv`
+   -  Visualization: `final_aggregated_plot.png` - shows average cumulative regret over time with confidence intervals
 
+4. Key features:
+   - Parallel execution across multiple GPUs
+   - Batched updates for improved efficiency
+   - Comprehensive logging and visualization
+   - Confidence interval calculations
 
-Key features:
-- Parallel execution across multiple GPUs
-- Batched updates for improved efficiency
-- Comprehensive logging and visualization
-- Confidence interval calculations
-
-### Running Experiments
-
-To run the bandit experiments:
-
-```bash
-cd inference
-python ccb_inf_batch.py
-```
-
-Key parameters that can be modified:
-- `num_jobs`: Number of parallel processes (default: 100)
-- `total_experiments`: Number of experiment sets (default: 10)
-- `T`: Number of time steps per experiment (default: 100)
-- `imag_horizon`: Imagination horizon for TS (default: 100)
-- `batch_exp`: Batch size for updates (default: 1)
-
-### Output
-
-The script generates:
-1. CSV files with detailed statistics:
-   - `excg_cumulative_final_statistics.csv`
-   - `pfn_cumulative_final_statistics.csv`
-2. Raw data files:
-   - `excg_cumulative_all_raw_data.csv`
-   - `pfn_cumulative_all_raw_data.csv`
-3. Visualization:
-   - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals
 
 ## Active Learning Experiments
 
-Here are the steps you need to take to reproduce the active learning results
-
-1. Generate the data: Run `python ./data/generate_data.py --data_dir [where_to_save_data] --data_type al_regions_v2`
+1. Generate data: Run `python ./data/generate_data.py --data_dir [where_to_save_data] --data_type al_regions_v2`
 2. Train models on the generated data:
-
    - modify `dataset_dir` field in `./scripts/uq_al_regions_v2_50_autoreg.yaml` and `./scripts/uq_al_regions_v2_50_excg.yaml`
    - run `python launch.py train.py [either yaml file above] --port 29500`
 
