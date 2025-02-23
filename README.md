@@ -2,7 +2,7 @@
 
 This repository contains the code for the paper "Architectural and Inferential Inductive Biases For Exchangeable Sequence Modeling". 
 
-## Intorduction
+## Introduction
 We study the inferential and architectural inductive biases for exchangeable sequence modeling. For the inference stage, we compare one-step inference and multi-step inference.  We highlight a fundamental limitation of the prevalent single-step generation approach: inability to distinguish between epistemic and aleatoric uncertainty. However, multi-step autoregressive generation; enables superior uncertainty quantification that translates into better performance on downstream decision-making tasks. For architectural inductive biases - we compare cutom architectures that try to enforce exchangeability to the standard causal architectures. We demonstrate that custom architectures can significantly underperform standard causal architectures.
 
 ## Key components
@@ -21,14 +21,12 @@ We study the inferential and architectural inductive biases for exchangeable seq
     - `autoreg_model.py`: Implementation of `Standarad-causal` architecture.
     - `excg_model.py`: Implementation of `C-permutation Invariant` architecture.
     - `model_utils.py`: Some utility functions for the models.
+    - `TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
       
   - `inference`
     - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
-
-  - `models/TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
-    - 
+ 
     
-
 - `scripts`
     - `train.py`: Main training scripts for loading in the arguments and calling the trainer.
     - `accelerate_config.yaml`: The configuration file for using distributed training with accelerate.
@@ -41,6 +39,9 @@ We study the inferential and architectural inductive biases for exchangeable seq
 - `utils`
     - `load_model.py`: Loading the model.
     - `scheduler.py`: The learning rate scheduler.
+
+- `Active_Learning`
+    -
 
 ## Environment Setup
 
