@@ -23,7 +23,7 @@ We study the inferential and architectural inductive biases for exchangeable seq
     - `model_utils.py`: Some utility functions for the models.
     - `TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
       
-  - `inference`
+- `inference`
     - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
  
     
