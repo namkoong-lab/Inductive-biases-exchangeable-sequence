@@ -93,8 +93,8 @@ The inference code is located in the `inference` directory. The main script for 
 ## Multi-Armed Bandit Experiments
 
 1. The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms. Thompson Sampling (TS) Variants:
-  - TS with multi-step prediction
-  - TS with One-step prediction
+   - TS with multi-step prediction
+   - TS with One-step prediction
     
 2. Running Experiments: To run the bandit experiments - `cd inference python ccb_inf_batch.py`. Key parameters that can be modified:
    - `num_jobs`: Number of parallel processes (default: 100)
