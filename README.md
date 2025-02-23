@@ -77,63 +77,6 @@ For other configurations, you can modify the config files in the `configs` direc
 Notice that you must use a different port for each training process, if you are running multiple processes on the same
 machine. 
 
-## Configurations
-
-### Model Arguments (`model_args`)
-
-- **dim_llm_embedding**: Dimensionality of input X.
-- **dim_y**: Dimensionality of the Y (default: 1).
-- **emb_depth**: Depth of the embeder that embeds the input X into a embedding to input into the transformer model (default: 1).
-- **d_model**: Dimensionality of the transformer model input 
-- **dim_feedforward**: Dimensionality of the feedforward network inside the transformer model
-- **nhead**: Number of attention heads (must be a divisor of d_model) 
-- **dropout**: Dropout rate (default: 0.1).
-- **activation**: Activation function used in the model (default: gelu).
-- **num_layers**: Number of layers of transformer stacks
-- **bound_std**: Determins if bounding std output or not. Default bounding value is 0.05 (default: true).
-- **embed_type**: Type of embedding used, either embedding the concatenated input X and Y or embedding the input X only. (default: embed_concat).
-- **uncertainty**: Type of uncertainty modeling, can be `normal` or `riemann` (default: normal).
-- **loss_type**: Type of loss function used, can be `logprob` or `mse` (default: logprob).
-- **pad_value**: Padding value used in sequences (default: 0.0).
-- **gradient_type**: Type of parts for freezing. if `full`, all the transformer layers are frozen. If `std`, then freeze
-  all parameters, and only tune the std prediction network. (default: full).
-- **model_type**: Specifies the model type, can be `autoreg` or `excg` 
-
-### Training Arguments (`training_args`)
-
-- **lr**: Learning rate (default: 0.0003).
-- **seed**: Random seed for reproducibility (default: 3004).
-- **weight_decay**: Weight decay for regularization (default: 0.01).
-- **warmup_ratio**: Ratio of warmup steps, used for learning rate scheduler (default: 0.03).
-- **min_lr**: Minimum learning rate, used for learning rate scheduler (default: 0.00003).
-- **total_train_batch_size**: Total batch size for training, must be a multiple of `num_process` (default: 64).
-- **total_test_batch_size**: Total batch size for testing, must be a multiple of `num_process` (default: 64).
-- **num_process**: Number of processes for distributed training (default: 8).
-- **epochs**: Number of training epochs (default: 400).
-- **eval_steps**: Steps between evaluations. Since we are using data generated on the fly, this parameter is not used. 
-- **train_horizon**: Training horizon (default: 2000).
-- **test_horizon**: Testing horizon (default: 200).
-- **eval_func**: Evaluation function name (default: "eval_func").
-- **num_train_samples**: Number of training samples. This effectively controls the number of data in a training epoch. (default: 8192).
-- **num_test_samples**: Number of testing samples (default: 8192).
-- **load_from_checkpoint**: Load from checkpoint or not (default: false).
-- **checkpoint_path**: Path to the model checkpoint file.
-
-### Data Arguments (`data_args`)
-
-- **dataset_name**: Name of the dataset (default: "gp").
-- **num_train_workers**: Number of workers for training data loading (default: 8).
-- **num_test_workers**: Number of workers for testing data loading (default: 8).
-- **noise_scale**: Scale of noise added to the data (default: 0.1).
-- **dataset_dir**: Directory path to the dataset file. For GP, this is not used.
-- **alpha**: Alpha parameter for data processing (default: 0.05).
-
-### Logging Arguments (`logging_args`)
-
-- **task**: Task name for logging 
-- **wandb_project**: Project name for Weights & Biases logging
-- **eval_log_step**: Steps between logging evaluations (default: 10000).
-
 
 ## Models
 
@@ -146,7 +89,7 @@ and masks for training. Take a look at `construct_causal_input`, `construct_caus
 
 The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-# Multi-Armed Bandit Experiments
+## Multi-Armed Bandit Experiments
 
 The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms:
 
@@ -190,7 +133,7 @@ The script generates:
 3. Visualization:
    - `final_aggregated_plot.png`: Shows average cumulative regret over time with confidence intervals
 
-# Active Learning Experiments
+## Active Learning Experiments
 
 Here are the steps you need to take to reproduce the active learning results
 
@@ -204,4 +147,62 @@ Here are the steps you need to take to reproduce the active learning results
    - modify `save_folder` on line 155 of `./active_learn/run_al.py` to where you want to save active learning results
    - modify `DATA_FOLDER` on line 210 of `./active_learn/run_al.py` to where the generated data (from step 1) is
    - run `./active_learn/run_al.py`
+
+## Configurations
+
+### Data Arguments (`data_args`)
+
+- **dataset_name**: Name of the dataset (default: "gp").
+- **num_train_workers**: Number of workers for training data loading (default: 8).
+- **num_test_workers**: Number of workers for testing data loading (default: 8).
+- **noise_scale**: Scale of noise added to the data (default: 0.1).
+- **dataset_dir**: Directory path to the dataset file. For GP, this is not used.
+- **alpha**: Alpha parameter for data processing (default: 0.05).
+
+### Model Arguments (`model_args`)
+
+- **dim_llm_embedding**: Dimensionality of input X.
+- **dim_y**: Dimensionality of the Y (default: 1).
+- **emb_depth**: Depth of the embeder that embeds the input X into a embedding to input into the transformer model (default: 1).
+- **d_model**: Dimensionality of the transformer model input 
+- **dim_feedforward**: Dimensionality of the feedforward network inside the transformer model
+- **nhead**: Number of attention heads (must be a divisor of d_model) 
+- **dropout**: Dropout rate (default: 0.1).
+- **activation**: Activation function used in the model (default: gelu).
+- **num_layers**: Number of layers of transformer stacks
+- **bound_std**: Determins if bounding std output or not. Default bounding value is 0.05 (default: true).
+- **embed_type**: Type of embedding used, either embedding the concatenated input X and Y or embedding the input X only. (default: embed_concat).
+- **uncertainty**: Type of uncertainty modeling, can be `normal` or `riemann` (default: normal).
+- **loss_type**: Type of loss function used, can be `logprob` or `mse` (default: logprob).
+- **pad_value**: Padding value used in sequences (default: 0.0).
+- **gradient_type**: Type of parts for freezing. if `full`, all the transformer layers are frozen. If `std`, then freeze
+  all parameters, and only tune the std prediction network. (default: full).
+- **model_type**: Specifies the model type, can be `autoreg` or `excg` 
+
+### Training Arguments (`training_args`)
+
+- **lr**: Learning rate (default: 0.0003).
+- **seed**: Random seed for reproducibility (default: 3004).
+- **weight_decay**: Weight decay for regularization (default: 0.01).
+- **warmup_ratio**: Ratio of warmup steps, used for learning rate scheduler (default: 0.03).
+- **min_lr**: Minimum learning rate, used for learning rate scheduler (default: 0.00003).
+- **total_train_batch_size**: Total batch size for training, must be a multiple of `num_process` (default: 64).
+- **total_test_batch_size**: Total batch size for testing, must be a multiple of `num_process` (default: 64).
+- **num_process**: Number of processes for distributed training (default: 8).
+- **epochs**: Number of training epochs (default: 400).
+- **eval_steps**: Steps between evaluations. Since we are using data generated on the fly, this parameter is not used. 
+- **train_horizon**: Training horizon (default: 2000).
+- **test_horizon**: Testing horizon (default: 200).
+- **eval_func**: Evaluation function name (default: "eval_func").
+- **num_train_samples**: Number of training samples. This effectively controls the number of data in a training epoch. (default: 8192).
+- **num_test_samples**: Number of testing samples (default: 8192).
+- **load_from_checkpoint**: Load from checkpoint or not (default: false).
+- **checkpoint_path**: Path to the model checkpoint file.
+
+### Logging Arguments (`logging_args`)
+
+- **task**: Task name for logging 
+- **wandb_project**: Project name for Weights & Biases logging
+- **eval_log_step**: Steps between logging evaluations (default: 10000).
+
 
