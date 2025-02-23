@@ -18,13 +18,13 @@ We study the inferential and architectural inductive biases for exchangeable seq
     - `load_data.py`: Loads synthetic dataset generation (Gaussian Processes). Other dataset generation functions can also be defined here.
 
 - `models`
-    - `autoreg_model.py`: Implementation of `Standarad-causal` architecture.
-    - `excg_model.py`: Implementation of `C-permutation Invariant` architecture.
+    - `autoreg_model.py`: Implementation of Standarad-causal architecture.
+    - `excg_model.py`: Implementation of C-permutation Invariant architecture.
     - `model_utils.py`: Some utility functions for the models.
-    - `TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
+    - `TS_model.py`: The implementation of single-step and multi-step inference based Thompson sampling for multi-armed bandits (Takes in either Standarad-causal or C-permutation Invariant architecture).
       
 - `inference`
-    - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either `Standarad-causal` or `C-permutation Invariant` architecture).
+    - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either Standarad-causal or C-permutation Invariant architecture).
  
     
 - `scripts`
@@ -81,10 +81,7 @@ machine.
 
 ## Models
 
-Most parts of `autoreg_model.py` and `excg_model.py` are the same. The main difference comes from how they create input
-and masks for training. Take a look at `construct_causal_input`, `construct_causal_mask`, 
-`construct_causal_prediction_mask` in `autoreg_model.py` and `construct_excg_input`, `construct_excg_mask`,
-`construct_excg_prediction_mask` in `excg_model.py` for more details. 
+Most parts of `autoreg_model.py` (Standarad-causal) and `excg_model.py` (C-permutation Invariant) are the same. The main difference comes from how they create input and masks for training. Take a look at `construct_causal_input`, `construct_causal_mask`, `construct_causal_prediction_mask` in `autoreg_model.py` and `construct_excg_input`, `construct_excg_mask`, `construct_excg_prediction_mask` in `excg_model.py` for more details. 
 
 ## Inference
 
