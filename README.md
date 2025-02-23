@@ -40,7 +40,7 @@ We study the inferential and architectural inductive biases for exchangeable seq
     - `load_model.py`: Loading the model.
     - `scheduler.py`: The learning rate scheduler.
 
-- `Active_Learning`
+- `active_learning_experiments`
     -
 
 ## Environment Setup
