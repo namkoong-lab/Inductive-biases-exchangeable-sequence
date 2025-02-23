@@ -1,4 +1,4 @@
-# Thompson Sampling with Autoregressive Model for Contextual Bandit
+# Autoregressive Sequence Model for Active Learning
 
 This repository contains the code for the project "Thompson Sampling with Autoregressive Model for Contextual Bandit".
 Due to diverging codebase, this is a duplicated version of the parent folder.
