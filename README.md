@@ -134,15 +134,15 @@ and masks for training. Take a look at `construct_causal_input`, `construct_caus
 
 The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-### Contextual Bandit Experiments
+### Multi-Armed Bandit Experiments
 
 The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms:
 
 - **Thompson Sampling (TS) Variants**:
-  - Autoregressive TS with joint prediction
-  - Exchangeable TS with joint prediction
-  - One-step prediction (PFN)
-- **LinUCB** (baseline algorithm)
+  - Autoregressive TS with multi-step prediction
+  - Exchangeable TS with multi-step prediction
+  - One-step prediction
+
 
 Key features:
 - Parallel execution across multiple GPUs
