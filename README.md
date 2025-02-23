@@ -25,7 +25,6 @@ We study the inferential and architectural inductive biases for exchangeable seq
       
 - `inference`
     - `joint_prediction_model.py`: The implementation of single-step and multi-step inference (Takes in either Standarad-causal or C-permutation Invariant architecture).
- 
     
 - `scripts`
     - `train.py`: Main training scripts for loading in the arguments and calling the trainer.
@@ -87,7 +86,7 @@ Most parts of `autoreg_model.py` (Standarad-causal) and `excg_model.py` (C-permu
 
 The inference code is located in the `inference` directory. The main script for running contextual bandit experiments is `ccb_inf_batch.py`.
 
-## Multi-Armed Bandit Experiments
+## Multi-armed bandit experiments
 
 1. The `ccb_inf_batch.py` script implements a parallel experimentation framework for comparing different bandit algorithms. Thompson Sampling (TS) Variants:
    - TS with multi-step prediction
@@ -112,7 +111,7 @@ The inference code is located in the `inference` directory. The main script for 
    - Confidence interval calculations
 
 
-## Active Learning Experiments
+## Active learning experiments
 
 1. Generate data: Run `python ./data/generate_data.py --data_dir [where_to_save_data] --data_type al_regions_v2`
 2. Train models on the generated data:
@@ -126,7 +125,7 @@ The inference code is located in the `inference` directory. The main script for 
 
 ## Configurations
 
-### Data Arguments (`data_args`)
+### Data arguments (`data_args`)
 
 - **dataset_name**: Name of the dataset (default: "gp").
 - **num_train_workers**: Number of workers for training data loading (default: 8).
@@ -135,7 +134,7 @@ The inference code is located in the `inference` directory. The main script for 
 - **dataset_dir**: Directory path to the dataset file. For GP, this is not used.
 - **alpha**: Alpha parameter for data processing (default: 0.05).
 
-### Model Arguments (`model_args`)
+### Model arguments (`model_args`)
 
 - **dim_llm_embedding**: Dimensionality of input X.
 - **dim_y**: Dimensionality of the Y (default: 1).
@@ -155,7 +154,7 @@ The inference code is located in the `inference` directory. The main script for 
   all parameters, and only tune the std prediction network. (default: full).
 - **model_type**: Specifies the model type, can be `autoreg` or `excg` 
 
-### Training Arguments (`training_args`)
+### Training arguments (`training_args`)
 
 - **lr**: Learning rate (default: 0.0003).
 - **seed**: Random seed for reproducibility (default: 3004).
@@ -175,7 +174,7 @@ The inference code is located in the `inference` directory. The main script for 
 - **load_from_checkpoint**: Load from checkpoint or not (default: false).
 - **checkpoint_path**: Path to the model checkpoint file.
 
-### Logging Arguments (`logging_args`)
+### Logging arguments (`logging_args`)
 
 - **task**: Task name for logging 
 - **wandb_project**: Project name for Weights & Biases logging
